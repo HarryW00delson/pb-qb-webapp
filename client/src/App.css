@@ -1,0 +1,29 @@
+.App {
+  max-width: 640px;
+  margin: 4rem auto;
+  padding: 0 1.5rem;
+  font-family: system-ui, sans-serif;
+  text-align: center;
+}
+
+.status {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+
+.status.ok {
+  background-color: #16a34a22;
+  color: #16a34a;
+}
+
+.status.error {
+  background-color: #dc262622;
+  color: #dc2626;
+}
+
+.status.loading {
+  background-color: #9ca3af22;
+  color: #6b7280;
+}

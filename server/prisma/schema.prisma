@@ -1,0 +1,22 @@
+// Prisma schema for the optional PostgreSQL database. This is only
+// used when DATABASE_ENABLED=true (see server/src/config/env.ts and
+// server/.env.example) and the "db" service is started via
+// `docker compose --profile db up -d` (or a local Postgres instance
+// pointed to by DATABASE_URL).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Minimal sample model demonstrating the wiring end-to-end. Replace
+// with your own domain models.
+model Note {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+}
