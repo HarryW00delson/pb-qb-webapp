@@ -6,17 +6,18 @@
   text-align: center;
 }
 
-.search-form{
+.search-form {
   width: 100%;
   min-width: 244px;
   place-self: center;
 }
 
 .search-input {
+  box-sizing: border-box;
   margin: 8px 0 8px 0;
   padding-left: 12px;
   border: none;
-  height: 30px;
+  height: 32px;
   border-radius: 12px 0 0 12px;
   min-width: 160px;
   width: 65%;
