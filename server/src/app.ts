@@ -68,6 +68,25 @@ export function createApp(env: Env, deps: AppDependencies = {}) {
     res.status(200).json({ status: 'ok' });
   });
 
+  app.get('/api/web-sources', (_req: Request, res: Response) => {
+    if (env.WEB_SOURCES) {
+      res.status(200).json({
+        status: 'ok',
+        err: false,
+        webSources: env.WEB_SOURCES,
+        message: null
+      })
+    } else {
+      res.status(404).json({
+        status: 'failure',
+        err: true,
+        webSources: null,
+        message: 'No Web Sources Configured'
+      })
+    }
+    
+  });
+
   // Optional database (see server/prisma/schema.prisma and .env.example).
   // Nothing here runs, and no connection is attempted, unless
   // DATABASE_ENABLED=true.

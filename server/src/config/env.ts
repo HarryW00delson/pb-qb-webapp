@@ -31,6 +31,13 @@ export const envSchema = z
     NODE_ENV: z
       .enum(['development', 'test', 'production'])
       .default('development'),
+    WEB_SOURCES: z
+      .string()
+      .optional()
+      .transform((value) => 
+        (value ?? '')
+          .split(',')
+          .map((source) => source.trim())),
     PORT: z.coerce.number().int().min(1).max(65535).default(3001),
     // Comma-separated list of origins allowed to make cross-origin
     // requests to this API. Required and validated strictly in
