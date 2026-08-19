@@ -1,8 +1,8 @@
 {
-  "name": "fs-webapp-template",
+  "name": "pb-qb-webapp",
   "version": "0.1.0",
   "private": true,
-  "description": "Full-stack web app template: React + Vite client, Node.js/Express + TypeScript server, optional Dockerized PostgreSQL.",
+  "description": "Full-stack webapp designed to search for movies and tv shows.",
   "license": "GPL-3.0",
   "engines": {
     "node": ">=24.0.0",

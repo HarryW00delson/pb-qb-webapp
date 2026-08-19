@@ -1,4 +1,4 @@
-# fs-webapp-template
+# pb-qb-webapp
 
 A full-stack web app template: **React + Vite** client, **Node.js/Express + TypeScript** server, an optional **Dockerized PostgreSQL** database (via Prisma), and **Docker** support for upper environments. Local development runs natively (Vite + tsx watch) — no containers required day-to-day.
 

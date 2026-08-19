@@ -32,7 +32,7 @@ services:
     build:
       context: .
       dockerfile: server/Dockerfile
-    image: fs-webapp-template-server
+    image: pb-qb-webapp-server
     env_file:
       # Local secrets/overrides (copy server/.env.example -> server/.env).
       # Optional: compose still starts if the file doesn't exist yet.
@@ -74,7 +74,7 @@ services:
     build:
       context: .
       dockerfile: client/Dockerfile
-    image: fs-webapp-template-client
+    image: pb-qb-webapp-client
     ports:
       - '8080:8080'
     depends_on:
