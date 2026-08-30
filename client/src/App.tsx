@@ -1,4 +1,4 @@
-import { useEffect, useState, type SubmitEventHandler } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 
 type HealthState = 'loading' | 'ok' | 'error';

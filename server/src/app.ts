@@ -84,7 +84,12 @@ export function createApp(env: Env, deps: AppDependencies = {}) {
         message: 'No Web Sources Configured'
       })
     }
-    
+  });
+
+  app.get('/api/entertainment', (_req: Request, res: Response) => {
+    if (env.ENTERTAINMENT_API_URL) {
+      
+    }
   });
 
   // Optional database (see server/prisma/schema.prisma and .env.example).

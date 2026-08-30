@@ -38,6 +38,14 @@ export const envSchema = z
         (value ?? '')
           .split(',')
           .map((source) => source.trim())),
+    ENTERTAINMENT_API_URL: z.string(),
+    TRACKER_URLS: z
+      .string()
+      .optional()
+      .transform((value) => 
+        (value ?? '')
+          .split(',')
+          .map((url) => url.trim())),
     PORT: z.coerce.number().int().min(1).max(65535).default(3001),
     // Comma-separated list of origins allowed to make cross-origin
     // requests to this API. Required and validated strictly in
