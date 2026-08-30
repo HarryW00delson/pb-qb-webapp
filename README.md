@@ -1,6 +1,6 @@
 # pb-qb-webapp
 
-A full-stack web app template: **React + Vite** client, **Node.js/Express + TypeScript** server, an optional **Dockerized PostgreSQL** database (via Prisma), and **Docker** support for upper environments. Local development runs natively (Vite + tsx watch) — no containers required day-to-day.
+A full-stack web app for searching **movies and TV shows**: **React + Vite** client, **Node.js/Express + TypeScript** server, an optional **Dockerized PostgreSQL** database (via Prisma), and **Docker** support for upper environments. Local development runs natively (Vite + tsx watch) — no containers required day-to-day.
 
 ## Stack
 
@@ -11,6 +11,17 @@ A full-stack web app template: **React + Vite** client, **Node.js/Express + Type
 - **Tooling**: ESLint (flat config) + Prettier shared across workspaces, GitHub Actions CI
 - **Containers**: Multi-stage Dockerfiles + Docker Compose, intended for staging/production-like environments — not local dev
 - **License**: GPL-3.0
+
+## Current status
+
+This project is a work in progress. Today it provides:
+
+- A client search UI — search form plus a live server-status indicator — backed by two server endpoints:
+  - `GET /api/health` — liveness check.
+  - `GET /api/web-sources` — the configured search sources (from the `WEB_SOURCES` env var), listed under the search form.
+- An **optional** sample `/api/notes` list/create route pair demonstrating Prisma/PostgreSQL wiring (disabled by default; see below).
+
+Not yet implemented: the actual search — submitting the form currently only logs the query to the console. The plan is to add server-side search against the configured web sources and render the results in the client.
 
 ## Prerequisites
 
@@ -71,7 +82,7 @@ Run from the repo root (applies to both workspaces where relevant):
 
 Secrets and environment-specific config are **never hard-coded**. They're loaded from environment variables, populated locally via gitignored `.env` files or injected by your platform/orchestrator in real deployments. There are **two separate `.env` files** with different scopes:
 
-- `server/.env` (from `server/.env.example`): app-level runtime config for the server itself — `NODE_ENV`, `PORT`, `CORS_ALLOWED_ORIGINS`, `TRUST_PROXY`, rate-limit settings, and `DATABASE_ENABLED`/`DATABASE_URL` when running the server **natively**.
+- `server/.env` (from `server/.env.example`): app-level runtime config for the server itself — `NODE_ENV`, `PORT`, `WEB_SOURCES` (comma-separated list of the search sources exposed via `GET /api/web-sources`), `CORS_ALLOWED_ORIGINS`, `TRUST_PROXY`, rate-limit settings, and `DATABASE_ENABLED`/`DATABASE_URL` when running the server **natively**.
 - `.env` at the repo root (from `.env.example`): Docker Compose-level Postgres secrets (`POSTGRES_USER`/`POSTGRES_PASSWORD`/`POSTGRES_DB`) and `DATABASE_ENABLED`, used only when running the containerized stack via `docker-compose.yml`.
 
 - All config is validated at startup with `zod` (`server/src/config/env.ts`) — the server **fails fast** (non-zero exit) if required values are missing or malformed, rather than behaving unpredictably later.
