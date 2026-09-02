@@ -38,7 +38,13 @@ export const envSchema = z
         (value ?? '')
           .split(',')
           .map((source) => source.trim())),
-    ENTERTAINMENT_API_URL: z.string(),
+    // Base URL of the entertainment search API. Optional, like
+    // WEB_SOURCES/TRACKER_URLS: when unset, /api/entertainment reports a
+    // 404 failure instead of the app refusing to start.
+    ENTERTAINMENT_API_URL: z
+      .string()
+      .optional()
+      .transform((value) => value ?? ''),
     TRACKER_URLS: z
       .string()
       .optional()

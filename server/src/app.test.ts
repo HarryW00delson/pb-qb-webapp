@@ -63,6 +63,49 @@ describe('rate limiting', () => {
   });
 });
 
+describe('GET /api/entertainment', () => {
+  it('returns 200 and logs "hello world!" when configured', async () => {
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+
+    const app = createApp(
+      parseEnv({
+        NODE_ENV: 'test',
+        CORS_ALLOWED_ORIGINS: 'http://localhost:5173',
+        ENTERTAINMENT_API_URL: 'https://api.org',
+      }),
+    );
+
+    const response = await request(app)
+      .get('/api/entertainment')
+      .query({ q: 'dune' });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      status: 'ok',
+      err: false,
+      query: 'dune',
+      message: null,
+    });
+    expect(logSpy).toHaveBeenCalledWith('hello world!');
+
+    logSpy.mockRestore();
+  });
+
+  it('returns 404 when ENTERTAINMENT_API_URL is unset', async () => {
+    const app = createApp(baseEnv);
+
+    const response = await request(app).get('/api/entertainment');
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({
+      status: 'failure',
+      err: true,
+      query: null,
+      message: 'No Entertainment API Configured',
+    });
+  });
+});
+
 describe('optional database (/api/notes)', () => {
   it('is not mounted when DATABASE_ENABLED is false', async () => {
     const app = createApp(baseEnv);

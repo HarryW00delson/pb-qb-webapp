@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 
 type HealthState = 'loading' | 'ok' | 'error';
+type SearchState = 'idle' | 'loading' | 'ok' | 'error';
 type WebSources = Array<string>;
 type QueryState = string;
 
@@ -9,11 +10,25 @@ function App() {
   const [health, setHealth] = useState<HealthState>('loading');
   const [webSources, setWebSources] = useState<WebSources>([]);
   const [query, setQuery] = useState<QueryState>('');
+  const [search, setSearch] = useState<SearchState>('idle');
 
-  const handleSearch = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSearch = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(query.trim());
-  }
+    const trimmed = query.trim();
+    if (!trimmed || search === 'loading') return;
+
+    setSearch('loading');
+    try {
+      const res = await fetch(
+        `/api/entertainment?q=${encodeURIComponent(trimmed)}`,
+      );
+      if (!res.ok) throw new Error(`Unexpected status ${res.status}`);
+      const data = (await res.json()) as { status: string };
+      setSearch(data.status === 'ok' ? 'ok' : 'error');
+    } catch {
+      setSearch('error');
+    }
+  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -45,7 +60,9 @@ function App() {
         return res.json() as Promise<{ status: string, error: boolean, webSources: Array<string>, message: string }>;
       })
       .then((data) => {
-        setWebSources(data.webSources !== null ? data.webSources : []);
+        // Guard against a missing/malformed payload: storing undefined
+        // here would crash webSources.join() below on the next render.
+        setWebSources(Array.isArray(data.webSources) ? data.webSources : []);
       })
       .catch((err: unknown) => {
         if (err instanceof DOMException && err.name === 'AbortError') return;
@@ -67,6 +84,14 @@ function App() {
         </span>
       </p>
       <p>Search for movies and TV shows sourced from {webSources.join(', ')}.</p>
+      {search !== 'idle' && (
+        <p>
+          Search status:{' '}
+          <span className={`status search-status ${search}`}>
+            {search === 'loading' ? 'searching…' : search}
+          </span>
+        </p>
+      )}
       <form className="search-form" onSubmit={handleSearch}>
         <input className="search-input" placeholder='Search for Movies and TV Shows' value={query} onChange={(e) => setQuery(e.target.value)}></input>
         <button className="search-button" type='submit'>Search</button>
