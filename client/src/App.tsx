@@ -17,15 +17,18 @@ function App() {
     const trimmed = query.trim();
     if (!trimmed || search === 'loading') return;
 
+    const controller = new AbortController();
+
     setSearch('loading');
     try {
       const res = await fetch(
-        `/api/entertainment?q=${encodeURIComponent(trimmed)}`,
+        `/api/entertainment?q=${encodeURIComponent(trimmed)}`, { signal: controller.signal }
       );
       if (!res.ok) throw new Error(`Unexpected status ${res.status}`);
       const data = (await res.json()) as { status: string };
       setSearch(data.status === 'ok' ? 'ok' : 'error');
-    } catch {
+    } catch (err: unknown) {
+      if (err instanceof DOMException && err.name === 'AbortError') return;
       setSearch('error');
     }
   };
@@ -83,15 +86,13 @@ function App() {
           {health === 'loading' ? 'checking…' : health}
         </span>
       </p>
-      <p>Search for movies and TV shows sourced from {webSources.join(', ')}.</p>
-      {search !== 'idle' && (
-        <p>
+      <p>Search for movies and TV shows sourced from {webSources.length ? webSources.join(', ') : 'no sources configured.'}.</p>
+      <p>
           Search status:{' '}
           <span className={`status search-status ${search}`}>
             {search === 'loading' ? 'searching…' : search}
           </span>
         </p>
-      )}
       <form className="search-form" onSubmit={handleSearch}>
         <input className="search-input" placeholder='Search for Movies and TV Shows' value={query} onChange={(e) => setQuery(e.target.value)}></input>
         <button className="search-button" type='submit'>Search</button>

@@ -91,7 +91,6 @@ export function createApp(env: Env, deps: AppDependencies = {}) {
       // Placeholder handler: proves end-to-end connectivity with the
       // client before the real search integration lands.
       const query = typeof req.query.q === 'string' ? req.query.q : '';
-      console.log('hello world!');
       res.status(200).json({
         status: 'ok',
         err: false,

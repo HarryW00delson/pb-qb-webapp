@@ -9,7 +9,6 @@
 .search-form {
   width: 100%;
   min-width: 244px;
-  place-self: center;
 }
 
 .search-input {
@@ -48,6 +47,11 @@
 }
 
 .status.loading {
+  background-color: #9ca3af22;
+  color: #6b7280;
+}
+
+.status.idle {
   background-color: #9ca3af22;
   color: #6b7280;
 }
