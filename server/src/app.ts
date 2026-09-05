@@ -91,19 +91,29 @@ export function createApp(env: Env, deps: AppDependencies = {}) {
       // Placeholder handler: proves end-to-end connectivity with the
       // client before the real search integration lands.
       const query = typeof req.query.q === 'string' ? req.query.q : '';
-      res.status(200).json({
-        status: 'ok',
-        err: false,
-        query,
-        message: null,
-      });
-    } else {
-      res.status(404).json({
-        status: 'failure',
-        err: true,
-        query: null,
-        message: 'No Entertainment API Configured',
-      });
+      fetch(`${env.ENTERTAINMENT_API_URL}${encodeURIComponent(query)}`)
+        .then((apiRes) => {
+          if (!apiRes.ok) throw new Error(`Unexpected status ${apiRes.status}`);
+          return apiRes.json() as Promise<{ status: string }>;
+        })
+        .then((data) => {
+          res.status(200).json({
+            status: data.status === 'ok' ? 'ok' : 'error',
+            err: false,
+            query,
+            body: data,
+            message: null,
+          });
+        })
+        .catch((err: unknown) => {
+          console.error(err);
+          res.status(500).json({
+            status: 'error',
+            err: true,
+            query,
+            message: 'Entertainment API request failed',
+          });
+        });
     }
   });
 
